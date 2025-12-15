@@ -1,7 +1,7 @@
 services:
-  db:
+  example-project-db:
     image: postgres:15-alpine
-    container_name: nest-db
+    container_name: example-project-db
     ports:
       - "${DB_PORT}:5432"
     environment:
@@ -9,9 +9,9 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - example-project-postgres-data:/var/lib/postgresql/data
     networks:
-      - nest-network
+      - example-project-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 10s
@@ -19,7 +19,7 @@ services:
       retries: 5
 
 volumes:
-  postgres_data:
+  example-project-postgres-data:
 
 networks:
-  nest-network:
+  example-project-network:

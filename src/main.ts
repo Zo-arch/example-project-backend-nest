@@ -13,11 +13,13 @@ async function bootstrap() {
 		transform: true,
 	}));
 
+	const appName = process.env.APP_NAME || 'example-project';
+
 	const config = new DocumentBuilder()
-		.setTitle('Exemplo API')
-		.setDescription('API de exemplos')
+		.setTitle(`${appName} API`)
+		.setDescription(`Backend API for ${appName}`)
 		.setVersion('1.0')
-		.addTag('exemplos')
+		.addTag(appName)
 		.build();
 
 	const document = SwaggerModule.createDocument(app, config);
