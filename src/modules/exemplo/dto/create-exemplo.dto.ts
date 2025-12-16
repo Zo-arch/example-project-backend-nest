@@ -2,7 +2,7 @@ import { IsNotEmpty, IsString, Length, IsEnum, IsNumber, Min, IsBoolean, IsDateS
 import { ExemploEnum } from '../enum/exemplo.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ExemploRequestDTO {
+export class CreateExemploDto {
 	@ApiProperty({ enum: ExemploEnum, example: ExemploEnum.TIPO_A })
 	@IsNotEmpty({ message: 'O tipo do enum não pode ser nulo' })
 	@IsEnum(ExemploEnum)
@@ -30,3 +30,4 @@ export class ExemploRequestDTO {
 	@IsBoolean()
 	ativo: boolean;
 }
+

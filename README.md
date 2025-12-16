@@ -78,12 +78,16 @@ src/
 
 ## 🔧 Available Scripts
 
+### Development
 - `npm run start:dev` - Start development server with hot reload
 - `npm run build` - Build for production
 - `npm run start:prod` - Start production server
-- `npm run test` - Run unit tests
-- `npm run test:e2e` - Run end-to-end tests
-- `npm run lint` - Lint code
+
+### Migrations
+- `npm run migration:generate` - Generate migration using temporary database
+- `npm run migration:run` - Run pending migrations
+- `npm run migration:revert` - Revert last migration
+- `npm run migration:show` - Show migration status
 
 ## 🌐 Environment Variables
 
@@ -113,6 +117,75 @@ The project includes Docker Compose configuration for local development:
 - ✅ Generic query filtering and pagination
 - ✅ Docker Compose setup
 - ✅ Environment-based configuration
+- ✅ Automated migration generation system
+- ✅ Health check endpoints
+
+## 📦 Database Migrations
+
+### How It Works
+
+This project uses **TypeORM** with two different approaches:
+
+**Development:**
+- `synchronize: true` → TypeORM automatically creates/updates tables
+- Fast for development
+- **No migrations needed**
+
+**Production:**
+- `synchronize: false` → Uses migrations to control schema
+- Migrations are executed automatically or manually
+
+### Workflow
+
+#### 1. Development (Code Normally)
+```bash
+# Code your entities normally
+# TypeORM synchronizes automatically
+npm run start:dev
+```
+
+#### 2. Before Production (Generate Migrations)
+```bash
+# Generate migration using temporary database
+npm run migration:generate CreateProdutoTable
+
+# Review the generated migration
+# Commit the migration file
+git add src/migrations/
+git commit -m "feat: add CreateProdutoTable migration"
+```
+
+#### 3. Production
+```bash
+# Migrations are executed automatically (if migrationsRun: true)
+# OR manually:
+npm run migration:run
+```
+
+### Migration Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run migration:generate` | Generate migration using temporary clean database |
+| `npm run migration:run` | Run pending migrations |
+| `npm run migration:revert` | Revert last migration |
+| `npm run migration:show` | Show migration status |
+
+### How Migration Generation Works
+
+Since `synchronize: true` keeps the database always in sync, we use a **temporary clean database** to generate migrations:
+
+1. ✅ Creates a temporary PostgreSQL database
+2. ✅ Executes all existing migrations in the temporary database
+3. ✅ Compares your entities with the migrated database
+4. ✅ Generates migration only if there are differences
+5. ✅ Removes temporary database automatically
+
+**Important:**
+- Always review generated migrations before committing
+- Test locally with `npm run migration:run` before production
+- Never commit with `synchronize: true` in production
+- Backup database before running migrations in production
 
 ## 🔍 Finding Project-Specific Names
 

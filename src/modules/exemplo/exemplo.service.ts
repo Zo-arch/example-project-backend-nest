@@ -2,8 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Exemplo } from './entities/exemplo.entity';
-import { ExemploRequestDTO } from './dto/exemplo-request.dto';
-import { applyFiltersAndPaginate } from 'src/common/query/filter-query.util';
+import { CreateExemploDto } from './dto/create-exemplo.dto';
+import { UpdateExemploDto } from './dto/update-exemplo.dto';
+import { ExemploResponseDto } from './dto/exemplo-response.dto';
+import { applyFiltersAndPaginate } from 'src/common/utils/filter-query.util';
+import { BaseQueryDto } from 'src/common/dto/base-query.dto';
 
 @Injectable()
 export class ExemploService {
@@ -12,12 +15,12 @@ export class ExemploService {
 		private readonly exemploRepository: Repository<Exemplo>,
 	) { }
 
-	async criar(dto: ExemploRequestDTO): Promise<Exemplo> {
+	async criar(dto: CreateExemploDto): Promise<ExemploResponseDto> {
 		const novoExemplo = this.exemploRepository.create(dto);
 		return await this.exemploRepository.save(novoExemplo);
 	}
 
-	async buscarTodos(query: any) {
+	async buscarTodos(query: BaseQueryDto) {
 		const qb = this.exemploRepository.createQueryBuilder('exemplo');
 
 		const filters = {
@@ -31,7 +34,7 @@ export class ExemploService {
 		return applyFiltersAndPaginate(qb, query, filters);
 	}
 
-	async buscarPorId(id: number): Promise<Exemplo> {
+	async buscarPorId(id: number): Promise<ExemploResponseDto> {
 		const exemplo = await this.exemploRepository.findOne({ where: { id } });
 		if (!exemplo) {
 			throw new NotFoundException(`Exemplo com id ${id} não encontrado.`);
@@ -39,7 +42,7 @@ export class ExemploService {
 		return exemplo;
 	}
 
-	async atualizar(id: number, dto: ExemploRequestDTO): Promise<Exemplo> {
+	async atualizar(id: number, dto: UpdateExemploDto): Promise<ExemploResponseDto> {
 		const exemplo = await this.buscarPorId(id);
 
 		this.exemploRepository.merge(exemplo, dto);

@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
-import { BaseEntity } from '../../../common/base.entity';
-import { ExemploEnum } from '../../../common/enum/exemplo.enum';
+import { BaseEntity } from '../../../common/entities/base.entity';
+import { ExemploEnum } from '../enum/exemplo.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('exemplo')

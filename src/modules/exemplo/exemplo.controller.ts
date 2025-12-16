@@ -1,8 +1,10 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ExemploService } from './exemplo.service';
-import { ExemploRequestDTO } from './dto/exemplo-request.dto';
-import { Exemplo } from './entities/exemplo.entity';
+import { CreateExemploDto } from './dto/create-exemplo.dto';
+import { UpdateExemploDto } from './dto/update-exemplo.dto';
+import { ExemploResponseDto } from './dto/exemplo-response.dto';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BaseQueryDto } from 'src/common/dto/base-query.dto';
 
 @ApiTags('exemplos')
 @Controller('api/v1/exemplos')
@@ -11,9 +13,9 @@ export class ExemploController {
 
 	@Post()
 	@ApiOperation({ summary: 'Cria um novo exemplo' })
-	@ApiBody({ type: ExemploRequestDTO })
-	@ApiResponse({ status: 201, description: 'Exemplo criado com sucesso', type: Exemplo })
-	create(@Body() createDto: ExemploRequestDTO): Promise<Exemplo> {
+	@ApiBody({ type: CreateExemploDto })
+	@ApiResponse({ status: 201, description: 'Exemplo criado com sucesso', type: ExemploResponseDto })
+	create(@Body() createDto: CreateExemploDto): Promise<ExemploResponseDto> {
 		return this.exemploService.criar(createDto);
 	}
 
@@ -23,29 +25,29 @@ export class ExemploController {
 		status: 200,
 		description: 'Lista paginada de exemplos retornada com sucesso',
 	})
-	findAll(@Query() query: any) {
+	findAll(@Query() query: BaseQueryDto) {
 		return this.exemploService.buscarTodos(query);
 	}
 
 	@Get(':id')
 	@ApiOperation({ summary: 'Busca um exemplo pelo ID' })
 	@ApiParam({ name: 'id', type: Number })
-	@ApiResponse({ status: 200, description: 'Exemplo encontrado', type: Exemplo })
+	@ApiResponse({ status: 200, description: 'Exemplo encontrado', type: ExemploResponseDto })
 	@ApiResponse({ status: 404, description: 'Exemplo não encontrado' })
-	findOne(@Param('id', ParseIntPipe) id: number): Promise<Exemplo> {
+	findOne(@Param('id', ParseIntPipe) id: number): Promise<ExemploResponseDto> {
 		return this.exemploService.buscarPorId(id);
 	}
 
 	@Put(':id')
 	@ApiOperation({ summary: 'Atualiza um exemplo pelo ID' })
 	@ApiParam({ name: 'id', type: Number })
-	@ApiBody({ type: ExemploRequestDTO })
-	@ApiResponse({ status: 200, description: 'Exemplo atualizado com sucesso', type: Exemplo })
+	@ApiBody({ type: UpdateExemploDto })
+	@ApiResponse({ status: 200, description: 'Exemplo atualizado com sucesso', type: ExemploResponseDto })
 	@ApiResponse({ status: 404, description: 'Exemplo não encontrado' })
 	update(
 		@Param('id', ParseIntPipe) id: number,
-		@Body() updateDto: ExemploRequestDTO
-	): Promise<Exemplo> {
+		@Body() updateDto: UpdateExemploDto
+	): Promise<ExemploResponseDto> {
 		return this.exemploService.atualizar(id, updateDto);
 	}
 
