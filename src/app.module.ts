@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { ExemploModule } from './modules/exemplo/exemplo.module';
 import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
@@ -35,8 +34,7 @@ import { getDatabaseConfig } from './config/database.config';
 
 		UserModule,
 		AuthModule,
-		HealthModule,
-		ExemploModule,
+		HealthModule
 	],
 	providers: [
 		{
